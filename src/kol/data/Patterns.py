@@ -217,7 +217,7 @@ patterns = {
     "playerName" : r'Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)',
     
     # User Profile patterns.
-    "profileUserName" : r'<td valign="?center"?>(?:<center>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>',
+    "profileUserName" : r'<td valign="?center"?><center><b>([^<>]+)<\/b> \(#[0-9]+\)<br>',
 
     # Clan patterns.
     "clanName" : r'<a href="clan_hall\.php">([^<>]*)<\/a>',
@@ -226,4 +226,8 @@ patterns = {
     "clanAcceptingApps" : r'<p>Your clan is currently accepting applications\.<br>',
     "clanRankContainer" : r'<select name=level[0-9]+>(.*?)<\/select>',
     "clanRank" : r'<option value=([0-9]+)(?: selected)?>(.*?) \(&deg;([0-9]+)\)<\/option>',
+
+    # Store Inventory patterns.
+    "firstSeparation" : r'width=30 height=30></td><td>([^<>]*)</td>',
+    "secondSeparation" : r'(^.*?) \(([0-9]+)\)',
 }
