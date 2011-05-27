@@ -228,6 +228,5 @@ patterns = {
     "clanRank" : r'<option value=([0-9]+)(?: selected)?>(.*?) \(&deg;([0-9]+)\)<\/option>',
 
     # Store Inventory patterns.
-    "firstSeparation" : r'width=30 height=30></td><td>([^<>]*)</td>',
-    "secondSeparation" : r'(^.*?) \(([0-9]+)\)',
+    "storeInventory" : r'width=30 height=30><\/td><td>([^<>]+?)(?: \(([0-9]+)\))?<\/td><td>([0-9,]+)</td><td>([^.]*)</'
 }
