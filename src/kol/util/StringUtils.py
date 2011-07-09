@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 HTML_ENTITY_ENCODINGS = {
     '"' : "&quot;",
@@ -9,8 +10,37 @@ HTML_ENTITY_ENCODINGS = {
     '©' : "&copy;",
     '®' : "&reg;",
     '°' : "&deg;",
+    '¡' : "&iexcl;",
     '¿' : "&iquest;",
-    'ñ' : "&ntilde;"
+    'æ' : "&aelig;",
+    'Æ' : "&AElig;",
+    'á' : "&aacute;",
+    'Á' : "&Aacute;",
+    'ä' : "&auml;",
+    'Ä' : "&Auml;",
+    'å' : "&aring;",
+    'Å' : "&Aring;",
+    'ß' : "&szlig;",
+    'é' : "&eacute;",
+    'É' : "&Eacute;",
+    'ë' : "&euml;",
+    'Ë' : "&Euml;",
+    'í' : "&iacute;",
+    'Í' : "&Iacute;",
+    'ï' : "&iuml;",
+    'Ï' : "&Iuml;",
+    'ñ' : "&ntilde;",
+    'Ñ' : "&Ntilde;",
+    'ó' : "&oacute;",
+    'Ó' : "&Oacute;",
+    'ö' : "&ouml;",
+    'Ö' : "&Ouml;",
+    'ø' : "&oslash;",
+    'Ø' : "&Oslash;",
+    'ú' : "&uacute;",
+    'Ú' : "&Uacute;",
+    'ü' : "&uuml;",
+    'Ü' : "&Uuml;",
 }
 
 def htmlEntityEncode(text):
@@ -24,3 +54,6 @@ def htmlEntityDecode(text):
         text = text.replace(v, k)
     text = text.replace("&amp;", '&')
     return text
+
+def htmlRemoveTags(text):
+    return re.sub(r'<[^>]*?>', '', text)

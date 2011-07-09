@@ -71,7 +71,7 @@ patterns = {
     "currentChatChannel" : r'<font color="?#?\w+"?>Currently in channel: ([^<>]+)<',
     "chatLastSeen" : r"lastseen:([0-9]+)",
     "chatChannel" : r'^<font color="?#?\w+"?>\[([^<>]+)\]<\/font> ',
-    "chatMessage" : r'<b><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font><\/b><\/a>: (.*)$',
+    "chatMessage" : r'<b><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font>(?:<\/b>|<\/a>|:)* (.*)$',
     "chatEmote" : r'<b><i><a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/b><\/font><\/a> (.*)<\/i>$',
     "privateChat" : r'<a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?blue"?><b>([^)]+) \(private\):<\/b><\/font><\/a> <font color="?blue"?>(.*)</font>$',
     "chatNewKmailNotification" : r'<a target="?mainpane"? href="messages\.php"><font color="?green"?>New message received from <a target="?mainpane"? href=\'showplayer\.php\?who=([0-9]+)\'><font color="?green"?>([^<>]+)<\/font><\/a>\.<\/font><\/a>$',
@@ -88,6 +88,8 @@ patterns = {
     "chatMultiLineStart" : r'<b><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font><\/b><\/a>:$',
     "chatMultiLineEmote" : r'<b><i><a target="?mainpane"? href="showplayer\.php\?who=(-?[0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/b><\/font><\/a>$',
     "outgoingPrivate" : r'<font color="?blue"?><b>private to <a class=nounder target="?mainpane"? href="?showplayer.php\?who=([0-9]+)"?><font color="?blue"?>(.*?)</font></a></b>:(.*?)</font></br>',
+    "chatPlayerLoggedOn" : r'<font color=green><a target=mainpane href=\'showplayer\.php\?who=([0-9]+)\'><font color=green><b>([^<>]+)<\/b><\/font><\/a> logged on\.<\/font>$',
+    "chatPlayerLoggedOff" : r'<font color=green><a target=mainpane href=\'showplayer\.php\?who=([0-9]+)\'><font color=green><b>([^<>]+)<\/b><\/font><\/a> logged off\.<\/font>$',
 
     # Clan dungeon patterns.
     "dungeonActivity" : r'(?:^|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ([^<>]+) \(([0-9,]+) turns?\)',
@@ -145,6 +147,7 @@ patterns = {
     'noMeatForStore' : r"(?:You can't afford that many of that item)|(?:You can't afford that item)|(?:You can't afford to purchase that)",
     'invalidStore' : r"You've been sent back here by some kind of bug",
     'notSoldHere' : r"(?:This store doesn't sell that item)|(?:Invalid item selected)",
+    "storeInventory" : r'width=30 height=30><\/td><td>([^<>]+?)(?: \(([0-9]+)\))?<\/td><td>([0-9,]+)</td><td>([^.]*)</td><td><a href="managestore.php\?action=take&whichitem=([0-9]+)">',
 
     # Hermit patterns.
     'noTrinkets' : r"You don't have enough stuff",
@@ -218,6 +221,10 @@ patterns = {
     
     # User Profile patterns.
     "profileUserName" : r'<td valign="?center"?>(?:<center>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>',
+    "profileClan" : r'<a class=nounder href="showclan\.php\?whichclan=([0-9]+)">(.*?)<\/a>',
+    "profileNumAscensions" : r'Ascensions<\/a>:<\/b><\/td><td>([0-9,]+)<\/td>',
+    "profileNumTrophies" : r'Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>',
+    "profileNumTattoos" : r'Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>',
 
     # Clan patterns.
     "clanName" : r'<a href="clan_hall\.php">([^<>]*)<\/a>',
@@ -226,7 +233,16 @@ patterns = {
     "clanAcceptingApps" : r'<p>Your clan is currently accepting applications\.<br>',
     "clanRankContainer" : r'<select name=level[0-9]+>(.*?)<\/select>',
     "clanRank" : r'<option value=([0-9]+)(?: selected)?>(.*?) \(&deg;([0-9]+)\)<\/option>',
-
-    # Store Inventory patterns.
-    "storeInventory" : r'width=30 height=30><\/td><td>([^<>]+?)(?: \(([0-9]+)\))?<\/td><td>([0-9,]+)</td><td>([^.]*)</'
+    "clanWhitelistMember" : r'<tr><td><input type=hidden name=player[0-9]+ value=[0-9]+><a href=\'showplayer\.php\?who=(?P<userId>[0-9]+)\' class=nounder><b>(?P<userName>[^<>]+)</b> \(#[0-9]+\)<\/a><\/td><td>(?:<select.*?<option value=(?P<clanRankId>[0-9]+) selected>.*?<\/select>|(?P<clanRankName>[^<>]+))<\/td><td>(?:<input type=text class=text size=[0-9]+ name=title[0-9]+ value=")?(?P<clanTitle>[^<>]+)(?:">)?<\/td>',
+    "clanLogEntry" : r'>(?P<date>[0-9/]+, [0-9:]+(?:AM|PM)): (?:<a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>)?(?P<userName>[^<>]+) \(#(?P<userId>[0-9]+)\)(?:<\/a>)? (?P<action>.*?)<br>',
+    "clanLogFax" : r'faxed in a (?P<monsterName>.*)$',
+    "clanLogAttack" : r'launched an attack against (?P<clanName>.*)\.$',
+    "clanLogWhitelistAdd" : r'added <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a> to the clan\'s whitelist\.$',
+    "clanLogPlayerJoinedAnotherClan" : r'joined another clan\.$',
+    "clanLogPlayerJoinedClanWhitelist" : r'was accepted into the clan \(whitelist\)$',
+    "clanLogStashItemAdd" : r'added (?P<quantity>[0-9,]+) (?P<itemName>.*)\.$',
+    "clanLogStashItemRemove" : r'took (?P<quantity>[0-9,]+) (?P<itemName>.*)\.$',
+    "clanLogMeatSpentArmy" : r'spent (?P<meat>[0-9,]+) Meat on the clan army\.$',
+    "clanLogChangedRank" : r'changed Rank for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\.$',
+    "clanLogChangedTitle" : r'changed title for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\. \((?P<clanTitle>.*)\)$',
 }
