@@ -44,7 +44,7 @@ patterns = {
     "itemAutosell" : r'<br>Selling Price: <b>(\d*) Meat\.<\/b>',
     "itemImage" : r'<img src="http:\/\/images\.kingdomofloathing\.com\/itemimages\/(.*?)"',
     "itemName" : r'<b>(.+?)<\/b>',
-    "itemType" : r'<br>Type: <b>([^<]*)<\/b><br>',
+    "itemType" : r'<br>Type: <b>([^<]*)<.*\/b><br>',
     "tooFull" : r"You're too full to eat that\.",
     "tooDrunk" : r"You're way too drunk already\.",
     "notBooze" : r"That's not booze\.",
@@ -62,6 +62,8 @@ patterns = {
     "userIgnoringUs" : r"<center><table><tr><td>This message could not be sent, because you are on that player's ignore list\.<\/td><\/tr><\/table><\/center>",
     "notEnoughItemsToSend" : r"<center><table><tr><td>You don't have enough of one of the items you're trying to send\.<\/td><\/tr><\/table><\/center>",
     "messageSent" : r"<td><center>Message sent\.<\/center><\/td>",
+    "kmailNotSentUserTrendy" : r"<center><table><tr><td>That player would never use something as old and outmoded as",
+    "weAreIgnoringUser" : r"<td>This message could not be sent, because that player is on your ignore list\.<\/td>",
 
     # Error patterns.
     "cantPulverizeItem" : r"<td>That's not something you can pulverize\.<\/td>",
@@ -76,8 +78,8 @@ patterns = {
     "privateChat" : r'<a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?blue"?><b>([^)]+) \(private\):<\/b><\/font><\/a> <font color="?blue"?>(.*)</font>$',
     "chatNewKmailNotification" : r'<a target="?mainpane"? href="messages\.php"><font color="?green"?>New message received from <a target="?mainpane"? href=\'showplayer\.php\?who=([0-9]+)\'><font color="?green"?>([^<>]+)<\/font><\/a>\.<\/font><\/a>$',
     "chatLink" : r'<a target="?_blank"? href="([^"]+)"><font color="?blue"?>\[link\]<\/font><\/a> ',
-    "chatWhoResponse" : r'<table><tr><td class=tiny><center><b>Players in this channel:',
-    "chatWhoPerson" : r'<a target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font><\/a>',
+    "chatWhoResponse" : r'<table><tr><td class=tiny><center><b>Players in (?:this channel|channel \w+):',
+    "chatWhoPerson" : r'<a (?:class="([^"]+)" )?target="?mainpane"? href="showplayer\.php\?who=([0-9]+)"><font color="?#?\w+"?>([^<>]+)<\/font><\/a>',
     "chatLinkedPlayer" : r"<a style='color: #?\w+' href='showplayer\.php\?who=([0-9]+)' target=mainpane>([^<]+)<\/a>",
     "newChatChannel" : r"<font color=[^>]+>You are now talking in channel: ([^\,]+?)\.<p><p>(.*?)</font>",
     "chatListenResponse" : r"<font color=[^>]+>Currently listening to channels:(.*?<b>.*?</b>.*?)</font>",
@@ -95,7 +97,7 @@ patterns = {
     "dungeonActivity" : r'(?:^|<br>|<br><b>|<b>)([^<>]+) \(#([0-9,]+)\) ([^<>]+) \(([0-9,]+) turns?\)',
     "dungeonLootDistribution" : r'(?:<blockquote>|<br>)([^<>]+) \(#([0-9,]+)\) distributed <b>([^<>]+)</b> to ([^<>]+) \(#([0-9,]+)\)<br>',
     "dungeonPreviousRun" : r'<tr><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([^<>]+)&nbsp;&nbsp;<\/td><td class="?small"?>([0-9,]+)<\/td><td class="?tiny"?>\[<a href="clan_raidlogs\.php\?viewlog=([0-9]+)">view logs<\/a>\]<\/td><\/tr>',
-    "dungeonLogCategory" : r'<b>([^<>]+):<\/b><blockquote>(.*?)<\/blockquote>',
+    "dungeonLogCategory" : r'<b>([^<>]+):?<\/b><blockquote>(.*?)<\/blockquote>',
     "imprisonedByChums" : r'^(.*) has been imprisoned by the C\. H\. U\. M\.s!$',
     "freedFromChums" : r'^(.*) has rescued (.*) from the C\. H\. U\. M\.s\.$',
 
@@ -104,6 +106,23 @@ patterns = {
     "dontHaveSkillToMixCocktail" : r"<td>You don't have the skill necessary to make that cocktail\.</td>",
     "dontHaveItemsForThatCocktail" : r"<td>You don't have enough of one of the necessary items to make a cocktail that tasty\.</td>",
     "dontHaveAdventuresToMixCocktail" : r"<td>You don't have that many adventures left\. +It takes <i>time<\/i> to make a good cocktail, man\.</td>",
+    "bartenderExplosion" : r"Smoke begins to pour from the head of your bartender-in-the-box. It begins to vibrate noisily, spits out a few drinks at random, and then explodes\.",
+
+    # Cooking patterns.
+    "itemsDontCook" : r"<td>Those two items don't combine to make anything tasty\.</td>",
+    "dontHaveSkillToCook" : r"<td>You don't have the skill necessary to cook this item\.</td>",
+    "dontHaveItemsForCook" : r"<td>You don't have enough of one of the ingredients of that dish\.</td>",
+    "dontHaveAdventuresToCook" : r"<td>You don't have that many adventures left\. +It takes <i>time<\/i> to cook stuff, man\.</td>",
+    "chefExplosion" : r"Smoke begins to pour from the head of your chef-in-the-box. It begins to vibrate noisily, spits out a few dishes at random, and then explodes\.",
+
+    # Campground patterns.
+    "campgroundHasOven" : r"You've got an E-Z Cook&trade; oven installed in your kitchen.",
+    "campgroundHasRange" : r"You've got a Dramatic&trade; range installed in your kitchen.",
+    "campgroundHasChef" : r"You've got a (clockwork )?Chef-in-the-box. He'll help you cook fancy dishes, and make it so cooking doesn't cost an Adventure!",
+    "campgroundHasShaker" : r"You've got a My First Shaker&trade; cocktailcrafting kit in your kitchen.",
+    "campgroundHasKit" : r"You've got a Queue Du Coq cocktailcrafting kit in your kitchen.",
+    "campgroundHasBartender" : r"You've got a (clockwork )?Bartender-in-the-box. He'll help you mix up fancy cocktails, and make it so cocktailcrafting doesn't cost an Adventure!",
+    "campgroundHasMat" : r"Your kitchen is equipped with a sushi-rolling mat.",
 
     # Character Pane patterns.
     'characterLevel' : r'<br>Level ([0-9]+)<br>(.*?)<table',
@@ -215,16 +234,19 @@ patterns = {
     "youDontHaveSGEEA" : r"<td>You don't have a green soft eyedrop echo antidote\.",
 
     # Ascension History patterns.
-    "fullAscension" : r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images.kingdomofloathing.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
+    "fullAscension" : r'</tr><td[^>]*>([0-9]+).*?</td><td[^>]*>([0-9/]+).*?</td><td[^>]*><span[^>]*>([0-9,]+).*?</span>.*?</td><td[^>]*><img [^>]*title="(.*?)"[^>]*></td><td[^>]*>(.*?)</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(<span[^>]*>)?([0-9,]+)(</span>)?</td><td[^>]*>(?:<img [^>]*title="(.*?)"[^>]*>)?</td><td[^>]*>(<img [^>]*title="(.*?)"[^>]*>|<img src="http://images.kingdomofloathing.com/otherimages/spacer.gif" width=30 height=30>)(<img [^>]*title="(.*?)"[^>]*>|</td>)',
     "familiarAscension" : r'^(.*?) \(([0-9.]+)%\)',
     "playerName" : r'Ascension History \(<a[^>]*><font[^>]*>(.*?)<\/font><\/a>\)',
-    
+
     # User Profile patterns.
     "profileUserName" : r'<td valign="?center"?>(?:<center>)?<b>([^<>]+)<\/b> \(#[0-9]+\)<br>',
-    "profileClan" : r'<a class=nounder href="showclan\.php\?whichclan=([0-9]+)">(.*?)<\/a>',
+    "profileClan" : r'Clan: <b><a class=nounder href="showclan\.php\?whichclan=([0-9]+)">(.*?)<\/a>',
     "profileNumAscensions" : r'Ascensions<\/a>:<\/b><\/td><td>([0-9,]+)<\/td>',
     "profileNumTrophies" : r'Trophies Collected:<\/b><\/td><td>([0-9,]+)<\/td>',
     "profileNumTattoos" : r'Tattoos Collected:<\/b><\/td><td>([0-9,]+)<\/td>',
+
+    # Quest Log patterns.
+    "questsCompleted" : r'<b>([\w\s,\.\'\?!]+)<\/b>(?!<\/td>)<br>([\w\s,\.\'\?!]+)<p>',
 
     # Clan patterns.
     "clanName" : r'<a href="clan_hall\.php">([^<>]*)<\/a>',
@@ -234,7 +256,7 @@ patterns = {
     "clanRankContainer" : r'<select name=level[0-9]+>(.*?)<\/select>',
     "clanRank" : r'<option value=([0-9]+)(?: selected)?>(.*?) \(&deg;([0-9]+)\)<\/option>',
     "clanWhitelistMember" : r'<tr><td><input type=hidden name=player[0-9]+ value=[0-9]+><a href=\'showplayer\.php\?who=(?P<userId>[0-9]+)\' class=nounder><b>(?P<userName>[^<>]+)</b> \(#[0-9]+\)<\/a><\/td><td>(?:<select.*?<option value=(?P<clanRankId>[0-9]+) selected>.*?<\/select>|(?P<clanRankName>[^<>]+))<\/td><td>(?:<input type=text class=text size=[0-9]+ name=title[0-9]+ value=")?(?P<clanTitle>[^<>]+)(?:">)?<\/td>',
-    "clanLogEntry" : r'>(?P<date>[0-9/]+, [0-9:]+(?:AM|PM)): (?:<a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>)?(?P<userName>[^<>]+) \(#(?P<userId>[0-9]+)\)(?:<\/a>)? (?P<action>.*?)<br>',
+    "clanLogEntry" : r'>(?P<date>[0-9/]+, [0-9:]+(?:AM|PM)): (?:<a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>)?(?P<userName>[^<>]+) \(#(?P<userId>[0-9]+)\)(?:<\/a>)? (?P<action>.*?)(?=<br>)',
     "clanLogFax" : r'faxed in a (?P<monsterName>.*)$',
     "clanLogAttack" : r'launched an attack against (?P<clanName>.*)\.$',
     "clanLogWhitelistAdd" : r'added <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a> to the clan\'s whitelist\.$',
@@ -245,7 +267,48 @@ patterns = {
     "clanLogMeatSpentArmy" : r'spent (?P<meat>[0-9,]+) Meat on the clan army\.$',
     "clanLogChangedRank" : r'changed Rank for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\.$',
     "clanLogChangedTitle" : r'changed title for <a class=nounder href=\'showplayer\.php\?who=[0-9]+\'>(?P<userName>.*) \(#(?P<userId>[0-9]+)\)<\/a>\. \((?P<clanTitle>.*)\)$',
-    
+
     # Search player Patterns
     "searchPlayers" : r'showplayer\.php\?who=([0-9]+)">([^<]*)<\/a>',
+
+    # Traveling Trader Patterns
+    "traderNotTradingForThatItem" : r'<td>The trader is not trading for that item\.<\/td>',
+    "traderCantTradeForThatMany" : r'<td>You can\'t trade for that many ',
+    "traderNotEnoughWads" : r'<td>You don\'t have enough twinkly wads to trade for that many ',
+
+    # Crimbo Patterns
+    "crimboItemIsNotCandy" : r"<td>That's not candy!<\/td>",
+    "crimboNotEnoughCandy" : r"<td>You don't have that much candy!<\/td>",
+    "crimboCandyCreditsReceived" : r"That gives you ([0-9,]+) Candy Credits?\.  You can trade in your",
+    "crimboInvalidGift" : r"<td>Invalid gift selected\.  Bah Humbug!<\/td>",
+    "crimboInvalidPlayer" : r"<td>Sorry, I couldn't find the player ",
+    "crimboUserAlreadyReceivedGift" : r"<td>The factory workers inform you that your intended recipient already has one of those\.<\/td>",
+
+    # Curse Patterns
+    "dontHaveThatItem" : r"<td>You don't have that item\.<\/td>",
+    "cantFireArrowAtSelf" : r"<td>You can't fire that at yourself\. +Your accuracy at point-blank range is terrible\.<\/td>",
+    "userAlreadyHitWithArrow" : r"<td>That player has already been hit with a time's arrow today\.<\/td>",
+    "cantFireArrowAtHardcoreRonin": r"<td>You can't fire a time's arrow at somebody in Ronin or Hardcore\.<\/td>",
+    "cantCursePlayerNotFound" : r"<td>That player could not be found\. +Confound it\.<\/td>",
+    "fireArrowSuccess" : r"It hits with a satisfying <i>thwock<\/i>",
+
+    # Nash Crosby's Still Patterns
+    "wrongStillProfession": r"<td>No still for you\.<\/td>",
+    "invalidStillItem": r"<td>Nash Crosby doesn\'t want anything to do with that item\.<\/td>",
+    "stillItemNotFound": r"<td>You don\'t have that many of that item, Chief.<\/td>",
+    "stillMaxLimit": r"<td>The still can\'t handle that much action today\.<\/td>",
+
+    # Bounty Hunter Hunter patterns.
+    'bountyAvailable' : r"These are the things I'm currently paying bounties on",
+    'dailyBountyItem' : r'<input type=hidden name=action value="takebounty"><input type=hidden name=whichitem value=(?P<itemid>[0-9]+)>',
+    'bountyChosen' : r'Get out there and collect those',
+    'bountyActive1' : r"I'm still waiting for you to bring me",
+    'bountyActive2' : r"You have (.*) collected (.*) so far",
+
+    # Wok related patterns.
+    "dontHaveItemsForWok" : r"<td>You don't have the materials for that amount of wokkage\.</td>",
+    "dontHaveAdventuresForWok" : r"<td>You don't have that many adventures left\.",
+    "noWokAccess" : "What wok are you tokking about\?",
+    "dontHaveSkillForWok" : r"<td>You don't have the skill necessary",
+
 }

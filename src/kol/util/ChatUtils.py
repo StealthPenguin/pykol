@@ -18,6 +18,7 @@ CHAT_CHANNELS = [
     "normal"
     "pvp",
     "radio",
+    "slimetube",
     "trade",
     "valhalla",
     "veteran",
@@ -26,7 +27,7 @@ CHAT_CHANNELS = [
 
 def parseIncomingChatMessage(text):
     return parseChatMessages(text, True)
-    
+
 def parseOutgoingChatMessages(text):
     return parseChatMessages(text, False)
 
@@ -247,6 +248,7 @@ def parseChatMessages(text, isIncoming):
                     chat["userId"] = int(match.group(1))
                     chat["userName"] = match.group(2)
                     chat["isMultiline"] = True
+                    chat["text"] = ""
                     parsedChat = True
 
             # See if this is the start of a multi-line emote (Gothy or Haiku)
@@ -258,6 +260,7 @@ def parseChatMessages(text, isIncoming):
                     chat["userId"] = int(match.group(1))
                     chat["userName"] = match.group(2)
                     chat["isMultiline"] = True
+                    chat["text"] = ""
                     parsedChat = True
 
         else:
@@ -268,9 +271,13 @@ def parseChatMessages(text, isIncoming):
                     chat["users"] = []
                     chatWhoPersonPattern = PatternManager.getOrCompilePattern("chatWhoPerson")
                     for match in chatWhoPersonPattern.finditer(line):
-                        userId = match.group(1)
-                        userName = match.group(2)
-                        chat["users"].append({"userId":userId, "userName":userName})
+                        userClass = match.group(1)
+                        userId = match.group(2)
+                        userName = match.group(3)
+                        userInfo = {"userId" : userId, "userName" : userName}
+                        if userClass == "afk":
+                            userInfo["isAway"] = True
+                        chat["users"].append(userInfo)
                     parsedChat = True
 
         if parsedChat and "text" in chat:
@@ -279,7 +286,7 @@ def parseChatMessages(text, isIncoming):
         # Handle unrecognized chat messages.
         if parsedChat == False:
             # If the last chat was flagged as starting a multiline
-            if len(chats) > 0 and "multiline" in chats[-1]:
+            if len(chats) > 0 and "isMultiline" in chats[-1]:
                 if chats[-1]["isMultiline"] == True:
                     if len(chats[-1]["text"]) > 0:
                         chats[-1]["text"] += "\n"
@@ -365,10 +372,10 @@ def cleanChatText(dirtyText):
             elif text[textEnd] == ' ':
                 textEnd += 1
 
-            if urlIndex == len(url) - 1:
+            if urlIndex == len(url):
                 found = True
 
-        newText = text[:match.start()] + url + text[textEnd+1:]
+        newText = text[:match.start()] + url + text[textEnd:]
         text = newText
         match = linkPattern.search(text)
 

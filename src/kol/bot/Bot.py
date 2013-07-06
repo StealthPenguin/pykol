@@ -42,7 +42,7 @@ class Bot(threading.Thread):
 
         self.params = params
         self.id = params["userName"]
-        self.stateIds = ["global", "cycle", "job", "kmail"]
+        self.stateIds = ["global", "rollover", "cycle", "job", "kmail"]
         self.states = {}
         self.session = None
         self.runBot = True
@@ -157,9 +157,17 @@ class Bot(threading.Thread):
                     elif inst.code == Error.LOGIN_FAILED_GENERIC:
                         level = Report.ERROR
                         timeToSleep = inst.timeToWait
+                    elif inst.code == Error.NOT_LOGGED_IN:
+                        timeToSleep = 600
                     else:
-                        level = Report.FATAL
-                        
+                        cxt = {}
+                        self.executeFilter("botStandardException", cxt, inst=inst)
+                        if "timeToSleep" in cxt:
+                            timeToSleep = cxt["timeToSleep"]
+                        if "level" in cxt:
+                            level = cxt["level"]
+                        else:
+                            level = Report.FATAL
                     Report.report("bot", level, msg, inst)
                     if level == Report.FATAL:
                         self.prepareShutdown()
@@ -211,6 +219,19 @@ class Bot(threading.Thread):
         # Open the main map to clear the bot's alerts.
         r = MainMapRequest(self.session)
         r.doRequest()
+
+        # Determine when next rollover happens, in UTC unix time format
+        nextRollover = self.session.rollover
+
+        # Clear rollover state if it is a different KoL day than last session
+        if "expires" in self.states["rollover"]:
+            rolloverTimeDiff = abs(nextRollover - self.states["rollover"]["expires"])
+            if rolloverTimeDiff >= 12*60*60:  # half a day
+                self.executeFilter("botPreClearRollover")
+                self.clearState("rollover")
+
+        # Set rollover state to be cleared next rollover
+        self.states["rollover"]["expires"] = nextRollover
 
         # Create a MailboxManager.
         if "doWork:kmail" in self.params:
@@ -479,7 +500,7 @@ class Bot(threading.Thread):
                     Report.info("bot", "User could not receive items/meat.", inst)
                     state["userInHardcoreOrRonin"] = 1
                 elif inst.code == Error.USER_IS_IGNORING:
-                    Report.info("bot", "The user is ignorning us.", inst)
+                    Report.info("bot", "The user is ignorning us or we are ignoring them.", inst)
                     state["userIsIgnoringUs"] = 1
                 else:
                     raise inst
